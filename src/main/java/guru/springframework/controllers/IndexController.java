@@ -46,28 +46,38 @@ public class IndexController {
 
     /*@RequestMapping with headers*/
 
-    @RequestMapping(value = "/head", headers = {"content-type=text/plain"})
+    @RequestMapping(value = "/head", headers = {"content-type=text/plain", "content-type=text/html"})
     String get(){
         return "Mapping applied along with headers";
     }
 
     /*@RequestMapping with @RequestParam*/
 
+    @RequestMapping(value = "/personId")
+    String getId(@RequestParam String personId){
+        System.out.println("ID is "+personId);
+        return "Get ID from query string of URL without value element";
+    }
     @RequestMapping(value = "/id")
-    String getId(@RequestParam("id") String id){
-        System.out.println("ID is "+id);
-        return "Get ID";
+    String getIdByValue(@RequestParam("id") String personId){
+        System.out.println("ID is "+personId);
+        return "Get ID from query string of URL with value element";
+    }
+
+    @RequestMapping(value = "/name")
+    String getName(@RequestParam(value = "person", required = false) String personName ){
+        return "Required element of request param";
     }
 
     /*@RequestMapping with produces and consumes attributes*/
 
     @RequestMapping(value = "/prod", produces = {"text/html", "application/JSON"})
     @ResponseBody
-    String getProcuces(){
+    String getProduces(){
         return "Produces attribute";
     }
 
-    @RequestMapping(value = "/cons", produces = {"text/plain", "application/XML"})
+    @RequestMapping(value = "/cons", consumes = {"text/plain", "application/XML"})
     String getConsumes(){
         return "Consumes attribute";
     }
@@ -86,13 +96,13 @@ public class IndexController {
 
     /*@RequestMapping with params attribute*/
 
-    @RequestMapping(value = "/fetch", params = {"id=10"})
-    String getParams(@RequestParam("id") String id){
+    @RequestMapping(value = "/fetch", params = {"personId=10"})
+    String getParams(@RequestParam("personId") String id){
         return "Fetched parameter using params attribute = "+id;
     }
 
-    @RequestMapping(value = "/fetch", params = {"id=20"})
-    String getParamsDifferent(@RequestParam("id") String id){
+    @RequestMapping(value = "/fetch", params = {"personId=20"})
+    String getParamsDifferent(@RequestParam("personId") String id){
         return "Fetched parameter using params attribute = "+id;
     }
 
