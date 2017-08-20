@@ -1,9 +1,7 @@
 package guru.springframework.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.*;
 
 @RestController
 @RequestMapping("/home")
@@ -44,7 +42,7 @@ public class IndexController {
     @RequestMapping(method = RequestMethod.PATCH)
     String patch(){
         return "Hello from patch";
-    }*/
+    }
 
     /*@RequestMapping with headers*/
 
@@ -53,10 +51,95 @@ public class IndexController {
         return "Mapping applied along with headers";
     }
 
+    /*@RequestMapping with @RequestParam*/
+
     @RequestMapping(value = "/id")
     String getId(@RequestParam("id") String id){
         System.out.println("ID is "+id);
         return "Get ID";
     }
-   
+
+    /*@RequestMapping with produces and consumes attributes*/
+
+    @RequestMapping(value = "/prod", produces = {"text/html", "application/JSON"})
+    @ResponseBody
+    String getProcuces(){
+        return "Produces attribute";
+    }
+
+    @RequestMapping(value = "/cons", produces = {"text/plain", "application/XML"})
+    String getConsumes(){
+        return "Consumes attribute";
+    }
+
+    /*@RequestMapping with @PathVariable for Dynamic URI */
+    @RequestMapping(value = "/fetch/{id}", method = RequestMethod.GET)
+    String getDynamicUriValue(@PathVariable String id){
+        System.out.println("ID is "+id);
+        return "Dynamic URI parameter fetched";
+    }
+    @RequestMapping(value = "/fetch/{id:[a-z]+}/{name}", method = RequestMethod.GET)
+    String getDynamicUriValueRegex(@PathVariable("name") String name){
+        System.out.println("Name is "+name);
+        return "Dynamic URI parameter fetched using regex";
+    }
+
+    /*@RequestMapping with params attribute*/
+
+    @RequestMapping(value = "/fetch", params = {"id=10"})
+    String getParams(@RequestParam("id") String id){
+        return "Fetched parameter using params attribute = "+id;
+    }
+
+    @RequestMapping(value = "/fetch", params = {"id=20"})
+    String getParamsDifferent(@RequestParam("id") String id){
+        return "Fetched parameter using params attribute = "+id;
+    }
+
+    /*@RequestMapping for default method*/
+    @RequestMapping()
+    String defaultMethod(){
+        return "This is a default method for the class";
+    }
+
+    /*@RequestMapping with wild card*/
+
+    @RequestMapping(value = "/wildcard/**")
+    String matchWildCard(){
+        return "Matched the wildcard characters";
+    }
+
+
+    /*@RequestMapping shortcuts*/
+
+
+    @GetMapping("/person")
+    public @ResponseBody ResponseEntity<String> getPerson() {
+        return new ResponseEntity<String>("Response from GET", HttpStatus.OK);
+    }
+
+    @GetMapping("/person/{id}")
+    public @ResponseBody ResponseEntity<String> getPersonById(@PathVariable String id){
+        return new ResponseEntity<String>("Response from GET with id " + id, HttpStatus.OK);
+    }
+
+    @PostMapping("/person/post")
+    public @ResponseBody ResponseEntity<String> postPerson() {
+        return new ResponseEntity<String>("Response from POST method", HttpStatus.OK);
+    }
+
+    @PutMapping("/person/put")
+    public @ResponseBody ResponseEntity<String> putPerson() {
+        return new ResponseEntity<String>("Response from PUT method", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/person/delete")
+    public @ResponseBody ResponseEntity<String> deletePerson() {
+        return new ResponseEntity<String>("Response from DELETE method", HttpStatus.OK);
+    }
+
+    @PatchMapping("/person/patch")
+    public @ResponseBody ResponseEntity<String> patchPerson() {
+        return new ResponseEntity<String>("Response from PATCH method", HttpStatus.OK);
+    }
 }
